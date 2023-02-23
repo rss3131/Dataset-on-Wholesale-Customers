@@ -1,0 +1,151 @@
+RAGHVENDRA SINGH SHAKTAWAT
+
+
+WHOLE SALE CUSTOMERS
+
+
+
+```{r}
+library(tidyverse)
+library(tidyr)
+library(stringr)
+library(klaR)
+library(e1071)
+library(dlookr)
+library(htmlwidgets)
+library(psych)
+library(rpart)
+library(rstatix)
+library(gmodels)
+library(ISLR)
+library(Metrics)
+library(janitor)
+library(knitr)
+library(magrittr)
+```
+
+
+
+```{r}
+setwd("C:/Users/raghv/Downloads")
+customers_df <- read.csv("Wholesale customers data.csv", stringsAsFactors = FALSE)
+head(customers_df)
+dim(customers_df)
+```
+
+First of all, I uploaded the data set which consists of 440 rows and 8 columns.
+
+Now using the k-means algorithm, I am using 3, 4, and 5 clusters. 
+
+```{r}
+str(customers_df)
+```
+
+```{r}
+glimpse(customers_df)
+```
+
+```{r}
+colSums(is.na(customers_df))
+```
+
+Before implementing the k-means algorithm of my choice, I explored the data set by looking at its structure, glimpse, as well as by checking whether there is any NA value present in the data set or not. As it is evident from colSums function, there are no NA values present in the data set and the summary of the data set can be seen below which also displays some outliers that are present here for every column present. I am going to visualise them in the form of box plots.
+
+```{r}
+summary(customers_df)
+```
+
+```{r}
+ggplot(customers_df, aes(Fresh)) + geom_boxplot(outlier.colour = "red", color = "blue") + labs(x = "Fresh")
+ggplot(customers_df, aes(Milk)) + geom_boxplot(outlier.colour = "green", color = "blue") + labs(x = "Milk")
+ggplot(customers_df, aes(Grocery)) + geom_boxplot(outlier.colour = "orange", color = "blue") + labs(x = "Grocery")
+ggplot(customers_df, aes(Frozen)) + geom_boxplot(outlier.colour = "yellow", color = "blue") + labs(x = "Frozen")
+ggplot(customers_df, aes(Detergents_Paper)) + geom_boxplot(outlier.colour = "pink", color = "blue") + labs(x = "Detergents_Paper")
+ggplot(customers_df, aes(Delicassen)) + geom_boxplot(outlier.colour = "brown", color = "blue") + labs(x = "Delicassen")
+```
+
+Here, I am going to remove the categorical variables from the data set which is composed of two columns, one being the channel and other being the region.
+
+```{r}
+customers <- subset(customers_df, select = -c(Channel, Region))
+head(customers)
+dim(customers)
+```
+
+Now, I am going to use three clusters for the k means and below that, I will be using the four and five clusters as well to compare the values obtained.  
+
+```{r}
+set.seed(123)
+three_clusters <- kmeans(customers, centers = 3)
+three_clusters
+```
+
+```{r}
+four_clusters <- kmeans(customers, centers = 4)
+four_clusters
+```
+
+```{r}
+five_clusters <- kmeans(customers, centers = 5)
+five_clusters
+```
+
+Now, I am going to visualise the three different clusters by using a cluster plot.
+
+```{r}
+library(factoextra)
+fviz_cluster(three_clusters, data = customers)
+```
+
+```{r}
+fviz_cluster(four_clusters, data = customers)
+```
+
+```{r}
+fviz_cluster(five_clusters, data = customers)
+```
+
+However, I feel like this data can be transformed so that it can fit within a specific scale and thus I am going to perform the scaling of data here.
+
+```{r}
+customers_s <- scale(customers)
+customers_DF <- data.frame(customers_s)
+head(customers_DF)
+```
+
+Now, I will process with the same steps that I used before scaling the data set for the 3, 4 and 5 clusters. The scaled data can be visualised in the form of a cluster plot for the 3, 4, and 5 clusters.
+
+```{r}
+set.seed(123)
+three_clusters <- kmeans(customers_DF, centers = 3)
+three_clusters
+```
+
+```{r}
+four_clusters <- kmeans(customers_DF, centers = 4)
+four_clusters
+```
+
+```{r}
+five_clusters <- kmeans(customers_DF, centers = 5)
+five_clusters
+```
+
+```{r}
+library(factoextra)
+fviz_cluster(three_clusters, data = customers_DF)
+```
+
+```{r}
+fviz_cluster(four_clusters, data = customers_DF)
+```
+
+```{r}
+fviz_cluster(five_clusters, data = customers_DF)
+```
+
+Here, it can be interpreted that the people form cluster of 3 spend the most on foreign products whereas the people from the cluster of 4 spend the most on detergents and for the final cluster, the spending is quite less in comparison to that for the clusters of 3 and 4. 
+
+
+
+THANK YOU
